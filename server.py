@@ -14,16 +14,23 @@ def emo_detector():
 
     # Pass the text to the sentiment_analyzer function and store the response
     response = emotion_detector(text_to_analyze)
-
-    # Extract the scores for the different emotions and the dominant emotion from the response
-    pairs = [f"{k}: {v}" for k, v in response.items()]
-    d_emotion = response['dominant_emotion']
-    str1 = "For the given statement, the system response is "
-    str2 = " and ".join([", ".join(pairs[:-2]), pairs[-2]])
-    str3 = f". The dominant emotion is {d_emotion}."
-    st = str1 + str2 + str3
-    return st
     
+    # Extract the dominant emotion from the response
+    dominant_emotion = response['dominant_emotion']
+
+    # Check if the dominant_emotion is not None, extract the scores of the emotions from the response
+    if dominant_emotion is not None:
+        pairs = [f"{k}: {v}" for k, v in response.items()]
+        str1 = "For the given statement, the system response is "
+        str2 = " and ".join([", ".join(pairs[:-2]), pairs[-2]])
+        str3 = f". The dominant emotion is {dominant_emotion}."
+        st = str1 + str2 + str3
+        # Return a formatted string with the scores for the different emotions
+        return st
+    else:
+        #if the dominant_emotion is None, indicating an error or invalid input
+        return "Invalid text! Please try again!"
+
 @app.route("/")
 def render_index_page():
     return render_template('index.html')
